@@ -14,11 +14,12 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
 
-//route for scraping articles
+//My finished route for scraping articles
 app.get("/scrape", function(req, res) {
   axios.get("http://www.vice.com/en_us").then(function(response) {
     var $ = cheerio.load(response.data);
     $("div.grid__wrapper").children("a").each(function(i, element) {
+    // console.log($(element));
     console.log($(element).text());
     console.log($(element).attr("href"));
 
@@ -41,16 +42,13 @@ app.get("/scrape", function(req, res) {
   });
 });
 
-// Route for showing saved articles
+// My finished route for showing the json of saved articles
 app.get("/articles", function(req, res) {
-  // Grab every document in the Articles collection
   db.article.find({})
     .then(function(dbarticle) {
-      // If we were able to successfully find Articles, send them back to the client
       res.json(dbarticle);
     })
     .catch(function(err) {
-      // If an error occurred, send it to the client
       res.json(err);
     });
 });
@@ -74,7 +72,7 @@ app.get("/articles/:id", function(req, res) {
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
-  db.Note.create(req.body)
+  db.note.create(req.body)
     .then(function(dbNote) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
@@ -91,7 +89,16 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-// Start the server
+//My finished route to delete saved articles!
+app.get('/clear', function(req, res){
+	db.article.deleteMany({}, 
+	   function(err){
+		if(err) res.json(err);
+		else res.redirect('/');
+	});
+});
+
+// Get to the chopper
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
