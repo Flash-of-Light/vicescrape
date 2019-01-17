@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var articleSchema = new Schema({
   title: {
     type: String,
-    unique: true,
+    unique: [true, "Title cannot be a duplicate"],
     required: true
   },
   link: {
