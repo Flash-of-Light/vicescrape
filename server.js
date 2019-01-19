@@ -21,24 +21,12 @@ app.get("/scrape", function(req, res) {
     var $ = cheerio.load(response.data);
     $("a.grid__wrapper__card").each(function(i, element) {
 
-      var title = $(element).children("div.grid__wrapper__card__text").children("div").children("h2.grid__wrapper__card__text__title").text();
-      var body = $(element).children("div.grid__wrapper__card__text").children("div").children("div.grid__wrapper__card__text__summary").text();
-      var link = $(element).attr("href");
-  
-      // Save these results in an object that we'll push into the results array we defined earlier
       var result = {};
-      // console.log(title);
-      // console.log(body);
-      // console.log(link);
-      result.push({
-        title: title,
-        body: body,
-        link: link
-      });
-    });
 
-    // result.title = $(element).text();
-    // result.link = $(element).attr("href");
+      result.title = $(this).children("div.grid__wrapper__card__text").children("div").children("h2.grid__wrapper__card__text__title").text();
+      result.body = $(this).children("div.grid__wrapper__card__text").children("div").children("div.grid__wrapper__card__text__summary").text();
+      result.link = $(this).attr("href");
+        
     db.article.create(result)
       .then(function(dbarticle) {
         console.log(dbarticle);
@@ -52,6 +40,7 @@ app.get("/scrape", function(req, res) {
   // }).catch(err => {
   //   console.log(err);
   });
+});
 
 // My finished route for showing the json of saved articles
 app.get("/articles", function(req, res) {

@@ -8,6 +8,10 @@ var articleSchema = new Schema({
     unique: [true, "Title cannot be a duplicate"],
     required: true
   },
+  body: {
+    type: String,
+    required: true
+  },
   link: {
     type: String,
     required: true
