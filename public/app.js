@@ -6,7 +6,10 @@ $.getJSON("/articles", function(data) {
       var title = $("<h2 class='title'" + data[i].title + "</h2>")
       //body
       //button 
-      // $("#articles").append("<p data-id='" + data[i]._id + "'>" + "Title: " + data[i].title + "<br />" + "Link: " + data[i].link + "</p>");
+      $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "Link: " + data[i].link + "</p>");
+      // $("#articles").append("<p data-id='" + data[i]._id + "'></p>");
+      // $("#articles").append("<p data-id='" + data[i].title + "'></p>");
+      // $("#articles").append("<p data-id='" + data[i].link + "'></p>");
       // $("#articles").append(<p>data[i].title</p>);
       // $("#articles").append(<p>data[i].</p>);
       // $("#articles").append(title);
