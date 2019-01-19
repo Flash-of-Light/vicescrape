@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var db = require("./models");
-var PORT = process.env.PORT || 3002;
+var PORT = process.env.PORT || 3003;
 var app = express();
 
 app.use(logger("dev"));
@@ -12,21 +12,33 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+//Connect to Mongo DB
+mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true, useCreateIndex: true  });
 
 //My finished route for scraping articles
 app.get("/scrape", function(req, res) {
   axios.get("http://www.vice.com/en_us").then(function(response) {
     var $ = cheerio.load(response.data);
-    $("div.grid__wrapper").children("a").each(function(i, element) {
-    // console.log($(element));
-    console.log($(element).text());
-    console.log($(element).attr("href"));
+    $("a.grid__wrapper__card").each(function(i, element) {
 
-    var result = {};
+      var title = $(element).children("div.grid__wrapper__card__text").children("div").children("h2.grid__wrapper__card__text__title").text();
+      var body = $(element).children("div.grid__wrapper__card__text").children("div").children("div.grid__wrapper__card__text__summary").text();
+      var link = $(element).attr("href");
+  
+      // Save these results in an object that we'll push into the results array we defined earlier
+      var result = {};
+      // console.log(title);
+      // console.log(body);
+      // console.log(link);
+      result.push({
+        title: title,
+        body: body,
+        link: link
+      });
+    });
 
-    result.title = $(element).text();
-    result.link = $(element).attr("href");
+    // result.title = $(element).text();
+    // result.link = $(element).attr("href");
     db.article.create(result)
       .then(function(dbarticle) {
         console.log(dbarticle);
@@ -37,10 +49,9 @@ app.get("/scrape", function(req, res) {
     });
 
   res.send("Scrape Complete");
-  }).catch(err => {
-    console.log(err);
+  // }).catch(err => {
+  //   console.log(err);
   });
-});
 
 // My finished route for showing the json of saved articles
 app.get("/articles", function(req, res) {
