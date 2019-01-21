@@ -25,7 +25,7 @@ app.get("/scrape", function(req, res) {
 
       result.title = $(this).children("div.grid__wrapper__card__text").children("div").children("h2.grid__wrapper__card__text__title").text();
       result.body = $(this).children("div.grid__wrapper__card__text").children("div").children("div.grid__wrapper__card__text__summary").text();
-      result.link = $(this).attr("href");
+      result.link = "https://www.vice.com" + $(this).attr("href");
         
     db.article.create(result)
       .then(function(dbarticle) {
