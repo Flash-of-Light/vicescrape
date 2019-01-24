@@ -97,6 +97,10 @@ app.get("/articles", function(req, res) {
 //     });
 // });
 
+app.get('/', function(req, res){
+  
+})
+
 //My finished route to delete saved articles!
 app.get('/clear', function(req, res){
 	db.article.deleteMany({}, 
