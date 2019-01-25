@@ -97,9 +97,18 @@ app.get("/articles", function(req, res) {
 //     });
 // });
 
-app.get('/', function(req, res){
-  
-})
+app.get("/", function(req, res) {
+  db.article.find({}, function(error, data) {
+    var hbsObject = {
+      article: data
+    };
+    res.render("home", hbsObject);
+  });
+  .catch(function(err) {
+    // If an error occurred, send it to the client
+    res.json(err);
+  });
+});
 
 //My finished route to delete saved articles!
 app.get('/clear', function(req, res){
